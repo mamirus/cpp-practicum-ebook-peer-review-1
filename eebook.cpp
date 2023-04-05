@@ -14,14 +14,14 @@ public:
         }
         id_to_pages_[user] = page;
     }
-    double Cheer(int user) {
-        if (id_to_pages_.count(user) == 0) {
+    double Cheer(int user) const {
+        if (id_to_pages_.find(user) == id_to_pages_.end()) {
             return 0;
         }
         if (id_to_pages_.size() == 1) {
             return 1;
         }
-        return (id_to_pages_.size() - read_at_least_[id_to_pages_[user]]) / static_cast<double>(id_to_pages_.size() - 1);
+        return (id_to_pages_.size() - read_at_least_[id_to_pages_.at(user)]) / static_cast<double>(id_to_pages_.size() - 1);
     }
 private:
     array<int, MAX_PAGES + 1> read_at_least_ = {};
@@ -37,7 +37,8 @@ void ProcessRequests(int num_of_requests, ostream& out) {
             int user, page;
             cin >> user >> page;
             db.Read(user, page);
-        } else if (command == "CHEER"s) {
+        }
+        else if (command == "CHEER"s) {
             int user;
             cin >> user;
             out << db.Cheer(user) << endl;
